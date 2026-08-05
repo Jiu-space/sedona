@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圣多娜释放法</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&family=Noto+Sans+SC:wght@300;400&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161d;
+    --border: #1e2330;
+    --mist: #2a3045;
+    --text: #c8cdd8;
+    --dim: #606878;
+    --accent: #7eb8c9;
+    --accent-soft: rgba(126,184,201,0.12);
+    --release: #a8c5a0;
+    --release-soft: rgba(168,197,160,0.12);
+    --warn: #c9a87e;
+    --warn-soft: rgba(201,168,126,0.12);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(126,184,201,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 65% 12%, rgba(168,197,160,0.18) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 65%, rgba(126,184,201,0.12) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 82%, rgba(168,197,160,0.18) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 540px;
+  }
+
+  /* 顶部 */
+  .header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.4rem;
+    font-weight: 300;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .header p {
+    font-size: 0.74rem;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+  }
+
+  /* 统计栏 */
+  .stats-bar {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-pill {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+  }
+
+  /* 主卡片 */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  /* 步骤点 */
+  .step-track {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.8rem;
+    justify-content: center;
+  }
+
+  .step-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--mist);
+    transition: all 0.4s;
+  }
+  .step-dot.active { background: var(--accent); transform: scale(1.4); }
+  .step-dot.done { background: var(--release); }
+
+  /* 问题 */
+  .question {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    line-height: 1.9;
+  }
+
+  .question-sub {
+    font-size: 0.78rem;
+    color: var(--dim);
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+
+  /* Tips框 */
+  .tips-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--dim);
+    line-height: 1.8;
+  }
+
+  .tips-box .tips-title {
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+  }
+
+  /* 输入 */
+  .emotion-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 300;
+    resize: none;
+    outline: none;
+    transition: border-color 0.3s;
+    margin-bottom: 1.5rem;
+  }
+
+  .emotion-input:focus { border-color: var(--accent); }
+  .emotion-input::placeholder { color: var(--dim); }
+
+  /* 选项 */
+  .options { display: flex; flex-direction: column; gap: 0.65rem; margin-bottom: 1.5rem; }
+
+  .opt-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1.2rem;
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s;
+  }
+
+  .opt-btn:hover, .opt-btn.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .opt-btn.release:hover, .opt-btn.release.selected {
+    background: var(--release-soft);
+    border-color: var(--release);
+    color: var(--release);
+  }
+
+  /* 三大想要卡片 */
+  .want-cards { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
+
+  .want-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .want-card:hover { border-color: var(--accent); }
+  .want-card.selected { border-color: var(--accent); background: var(--accent-soft); }
+
+  .want-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.9rem 1.1rem;
+  }
+
+  .want-icon { font-size: 1.2rem; }
+
+  .want-name {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .want-tag {
+    margin-left: auto;
+    font-size: 0.68rem;
+    color: var(--dim);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.15rem 0.6rem;
+  }
+
+  .want-desc {
+    font-size: 0.75rem;
+    color: var(--dim);
+    line-height: 1.7;
+    padding: 0 1.1rem 0.9rem;
+    display: none;
+  }
+
+  .want-card.selected .want-desc { display: block; }
+  .want-card.selected .want-name { color: var(--accent); }
+  .want-card.selected .want-tag { border-color: var(--accent); color: var(--accent); }
+
+  /* 多选提示 */
+  .multi-hint {
+    font-size: 0.72rem;
+    color: var(--dim);
+    text-align: center;
+    margin-bottom: 1rem;
+    margin-top: -0.5rem;
+  }
+
+  /* 继续按钮 */
+  .next-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 0.85rem;
+    color: var(--accent);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.25s;
+  }
+
+  .next-btn:hover { background: var(--accent-soft); }
+  .next-btn:disabled { opacity: 0.3; cursor: default; }
+
+  /* 释放页 */
+  .release-screen { text-align: center; padding: 0.5rem 0; }
+
+  .release-orb {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, rgba(168,197,160,0.6), rgba(126,184,201,0.2) 60%, transparent);
+    margin: 0 auto 1.8rem;
+    animation: float 3s ease-in-out infinite, gpulse 3s ease-in-out infinite;
+  }
+
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes gpulse { 0%,100%{box-shadow:0 0 25px rgba(168,197,160,0.1)} 50%{box-shadow:0 0 50px rgba(168,197,160,0.22)} }
+
+  .release-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--release);
+    letter-spacing: 0.25em;
+    margin-bottom: 0.8rem;
+  }
+
+  .release-msg {
+    font-size: 0.8rem;
+    color: var(--dim);
+    line-height: 1.9;
+    margin-bottom: 1.8rem;
+  }
+
+  .summary-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .summary-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .summary-row:last-child { margin-bottom: 0; }
+
+  .summary-label {
+    color: var(--dim);
+    font-size: 0.72rem;
+    white-space: nowrap;
+    padding-top: 0.1rem;
+  }
+
+  .summary-val { color: var(--text); line-height: 1.6; }
+
+  .release-tip {
+    background: var(--release-soft);
+    border: 1px solid rgba(168,197,160,0.2);
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.78rem;
+    color: var(--release);
+    line-height: 1.8;
+    margin-bottom: 1.8rem;
+    text-align: left;
+  }
+
+  .btn-row { display: flex; gap: 0.8rem; }
+
+  .again-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 0.8rem;
+    color: var(--accent);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.25s;
+  }
+
+  .again-btn:hover { background: var(--accent-soft); }
+
+  .history-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem;
+    color: var(--dim);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 300;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: all 0.25s;
+  }
+
+  .history-btn:hover { border-color: var(--text); color: var(--text); }
+
+  /* 历史记录 */
+  .history-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .history-title {
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.2rem;
+  }
+
+  .history-item {
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+    font-size: 0.78rem;
+    color: var(--dim);
+    line-height: 1.7;
+  }
+
+  .history-item:last-child { border-bottom: none; }
+
+  .history-item-emotion {
+    color: var(--text);
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .history-item-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.7rem;
+  }
+
+  .history-back {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1.5rem;
+    color: var(--dim);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .history-back:hover { border-color: var(--text); color: var(--text); }
+
+  .empty-history {
+    text-align: center;
+    color: var(--dim);
+    font-size: 0.8rem;
+    padding: 1.5rem 0;
+  }
+
+  .fade-in { animation: fadeIn 0.45s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+  .particle { position: absolute; border-radius: 50%; animation: rise linear forwards; opacity: 0; }
+  @keyframes rise { 0%{opacity:0.8;transform:translateY(0) scale(1)} 100%{opacity:0;transform:translateY(-60vh) scale(0.3)} }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<div class="container">
+  <div class="header">
+    <h1>释 放</h1>
+    <p>Sedona Release Method</p>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-pill">
+      <div class="stat-num" id="totalCount">0</div>
+      <div class="stat-label">累计释放次数</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-num" id="todayCount">0</div>
+      <div class="stat-label">今日释放次数</div>
+    </div>
+    <div class="stat-pill">
+      <div class="stat-num" id="streakCount">0</div>
+      <div class="stat-label">连续天数</div>
+    </div>
+  </div>
+
+  <div id="mainArea"></div>
+</div>
+
+<script>
+// ── 数据存储 ──
+const STORE_KEY = 'sedona_records';
+
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+  catch { return []; }
+}
+
+function saveRecord(r) {
+  const records = loadRecords();
+  records.unshift(r);
+  localStorage.setItem(STORE_KEY, JSON.stringify(records));
+}
+
+function updateStats() {
+  const records = loadRecords();
+  const today = new Date().toDateString();
+  const todayRecs = records.filter(r => new Date(r.time).toDateString() === today);
+  
+  // streak
+  let streak = 0;
+  const days = [...new Set(records.map(r => new Date(r.time).toDateString()))];
+  const d = new Date();
+  for (let i = 0; i < days.length; i++) {
+    const check = new Date(d);
+    check.setDate(d.getDate() - i);
+    if (days.includes(check.toDateString())) streak++;
+    else break;
+  }
+
+  document.getElementById('totalCount').textContent = records.length;
+  document.getElementById('todayCount').textContent = todayRecs.length;
+  document.getElementById('streakCount').textContent = streak;
+}
+
+// ── 三大想要 ──
+const WANTS = [
+  {
+    id: 'safety',
+    icon: '🌊',
+    name: '安全感',
+    tag: '恐惧·焦虑',
+    desc: '害怕失去、害怕未知、想要稳定和保护。\n比如：担心工作、怕被抛弃、对未来感到焦虑。',
+  },
+  {
+    id: 'approval',
+    icon: '🌸',
+    name: '认可感',
+    tag: '渴望被看见',
+    desc: '想被看见、被肯定、被爱、被接受。\n比如：在意别人眼光、渴望被夸奖、害怕被否定。',
+  },
+  {
+    id: 'control',
+    icon: '⚙️',
+    name: '控制感',
+    tag: '掌控·确定',
+    desc: '想掌控结果、想让事情按自己意愿走。\n比如：强迫自己计划、受不了不确定、想改变别人。',
+  },
+];
+
+// ── 流程步骤 ──
+const STEPS = [
+  { id: 'emotion' },
+  { id: 'allow' },
+  { id: 'want' },
+  { id: 'willing' },
+  { id: 'when' },
+];
+
+let current = 0;
+let answers = {};
+let selectedWants = [];
+let view = 'flow'; // 'flow' | 'release' | 'history'
+
+// ── 渲染入口 ──
+function render() {
+  updateStats();
+  if (view === 'history') { renderHistory(); return; }
+  if (view === 'release') { renderRelease(); return; }
+  renderStep();
+}
+
+// ── 各步骤渲染 ──
+function renderStep() {
+  const step = STEPS[current];
+  const area = document.getElementById('mainArea');
+
+  let dots = STEPS.map((s, i) => {
+    let cls = 'step-dot';
+    if (i < current) cls += ' done';
+    if (i === current) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  let inner = '';
+
+  if (step.id === 'emotion') {
+    inner = `
+      <div class="question">此刻，你注意到内心有什么感受？</div>
+      <div class="question-sub">不需要分析或评判，只是如实说出来就好。</div>
+      <div class="tips-box">
+        <div class="tips-title">💡 提示</div>
+        情绪可以是一个词，也可以是一句话。<br>
+        比如：焦虑、委屈、烦躁、沉重、空空的……<br>
+        没有对错，说出来就是开始。
+      </div>
+      <textarea class="emotion-input" id="emotionInput" rows="3" placeholder="写下你现在的感受…"></textarea>
+      <button class="next-btn" id="nextBtn" disabled onclick="nextStep()">继续 →</button>
+    `;
+  }
+
+  else if (step.id === 'allow') {
+    inner = `
+      <div class="question">你能允许这个感受存在吗？</div>
+      <div class="question-sub">不是要你喜欢它，只是承认它现在在这里。</div>
+      <div class="tips-box">
+        <div class="tips-title">💡 提示</div>
+        我们常常想逃开不舒服的感受，但抗拒本身也会消耗能量。<br>
+        "允许"不等于认同，只是说：好，你在，我看到你了。<br>
+        试着把感受放在你前方，看着它，不评判。
+      </div>
+      <div class="options">
+        <button class="opt-btn" onclick="selectOpt(this,'是的，我允许它存在')">是的，我允许它存在</button>
+        <button class="opt-btn" onclick="selectOpt(this,'有点难，但我愿意试试')">有点难，但我愿意试试</button>
+        <button class="opt-btn" onclick="selectOpt(this,'我还在抗拒它')">我还在抗拒它</button>
+      </div>
+      <button class="next-btn" id="nextBtn" disabled onclick="nextStep()">继续 →</button>
+    `;
+  }
+
+  else if (step.id === 'want') {
+    inner = `
+      <div class="question">这个感受背后，你在渴望什么？</div>
+      <div class="question-sub">可以多选。每张卡片展开后有详细说明。</div>
+      <div class="tips-box">
+        <div class="tips-title">💡 提示</div>
+        圣多娜认为，几乎所有情绪背后都藏着三种基本渴望。<br>
+        不需要想太久，哪个让你感觉"对，就是这个"就选它。
+      </div>
+      <p class="multi-hint">点击展开说明，再次点击取消选择</p>
+      <div class="want-cards">
+        ${WANTS.map(w => `
+          <div class="want-card" id="want-${w.id}" onclick="toggleWant('${w.id}')">
+            <div class="want-card-header">
+              <span class="want-icon">${w.icon}</span>
+              <span class="want-name">${w.name}</span>
+              <span class="want-tag">${w.tag}</span>
+            </div>
+            <div class="want-desc">${w.desc.replace(/\n/g,'<br>')}</div>
+          </div>
+        `).join('')}
+      </div>
+      <button class="next-btn" id="nextBtn" disabled onclick="nextStep()">继续 →</button>
+    `;
+  }
+
+  else if (step.id === 'willing') {
+    inner = `
+      <div class="question">你愿意放下它吗？</div>
+      <div class="question-sub">哪怕只是一点点，也算。</div>
+      <div class="tips-box">
+        <div class="tips-title">💡 提示</div>
+        "放下"不是假装没事，也不是压抑感受。<br>
+        它更像是：松开紧握的手，让感受自然流动。<br>
+        不必强迫自己，诚实回答就好。
+      </div>
+      <div class="options">
+        <button class="opt-btn release" onclick="selectOpt(this,'是的，我愿意放下')">是的，我愿意放下</button>
+        <button class="opt-btn" onclick="selectOpt(this,'也许愿意')">也许愿意</button>
+        <button class="opt-btn" onclick="selectOpt(this,'暂时还不想')">暂时还不想</button>
+      </div>
+      <button class="next-btn" id="nextBtn" disabled onclick="nextStep()">继续 →</button>
+    `;
+  }
+
+  else if (step.id === 'when') {
+    inner = `
+      <div class="question">那么……什么时候？</div>
+      <div class="question-sub">这是一个邀请，不是催促。</div>
+      <div class="tips-box">
+        <div class="tips-title">💡 提示</div>
+        圣多娜说，放下可以在一瞬间发生。<br>
+        当你真的愿意，它就已经开始了。<br>
+        选"现在"并不意味着你要立刻变好——<br>
+        只是给内心一个信号：我准备好了。
+      </div>
+      <div class="options">
+        <button class="opt-btn release" onclick="selectOpt(this,'现在')">现在</button>
+        <button class="opt-btn release" onclick="selectOpt(this,'慢慢来')">慢慢来</button>
+        <button class="opt-btn" onclick="selectOpt(this,'还需要更多时间')">还需要更多时间</button>
+      </div>
+      <button class="next-btn" id="nextBtn" disabled onclick="nextStep()">继续 →</button>
+    `;
+  }
+
+  area.innerHTML = `
+    <div class="card fade-in">
+      <div class="step-track">${dots}</div>
+      ${inner}
+    </div>
+  `;
+
+  // 输入框监听
+  if (step.id === 'emotion') {
+    const ta = document.getElementById('emotionInput');
+    ta.addEventListener('input', () => {
+      document.getElementById('nextBtn').disabled = ta.value.trim() === '';
+    });
+    ta.focus();
+  }
+
+  // 恢复已选状态
+  if (step.id === 'want' && selectedWants.length > 0) {
+    selectedWants.forEach(id => {
+      const el = document.getElementById('want-' + id);
+      if (el) el.classList.add('selected');
+    });
+    document.getElementById('nextBtn').disabled = false;
+  }
+}
+
+// ── 交互 ──
+function selectOpt(el, val) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[STEPS[current].id] = val;
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function toggleWant(id) {
+  const el = document.getElementById('want-' + id);
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    selectedWants = selectedWants.filter(w => w !== id);
+  } else {
+    el.classList.add('selected');
+    selectedWants.push(id);
+  }
+  document.getElementById('nextBtn').disabled = selectedWants.length === 0;
+}
+
+function nextStep() {
+  const step = STEPS[current];
+  if (step.id === 'emotion') {
+    answers.emotion = document.getElementById('emotionInput').value.trim();
+  } else if (step.id === 'want') {
+    answers.want = selectedWants;
+  }
+  current++;
+  if (current >= STEPS.length) {
+    // 保存记录
+    saveRecord({
+      time: new Date().toISOString(),
+      emotion: answers.emotion,
+      allow: answers.allow,
+      wants: answers.want,
+      willing: answers.willing,
+      when: answers.when,
+    });
+    view = 'release';
+  }
+  render();
+}
+
+// ── 释放页 ──
+function renderRelease() {
+  launchParticles();
+  const wantNames = (answers.want || []).map(id => WANTS.find(w => w.id === id)?.name).filter(Boolean).join('、');
+  const whenVal = answers.when || '';
+  let tip = '';
+  if (whenVal === '现在') {
+    tip = '你选择了"现在"——这一刻，你已经迈出了最重要的一步。感受不必马上消失，但它与你的关系，已经开始松动了。';
+  } else if (whenVal === '慢慢来') {
+    tip = '慢慢来也很好。释放不是比赛，每一次愿意朝这个方向走，都是真实的进步。';
+  } else {
+    tip = '还需要时间完全没关系。你今天愿意坐下来面对它，已经是一种勇气了。';
+  }
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="card fade-in">
+      <div class="release-screen">
+        <div class="release-orb"></div>
+        <div class="release-title">已 释 放</div>
+        <div class="release-msg">你完成了一次圣多娜释放。<br>感受不必立刻消失——但你已经允许它流动了。</div>
+        <div class="summary-box">
+          <div class="summary-row">
+            <span class="summary-label">感受</span>
+            <span class="summary-val">${answers.emotion || '—'}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">渴望</span>
+            <span class="summary-val">${wantNames || '—'}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">选择</span>
+            <span class="summary-val">${answers.when || '—'}</span>
+          </div>
+        </div>
+        <div class="release-tip">${tip}</div>
+        <div class="btn-row">
+          <button class="again-btn" onclick="restart()">再来一次</button>
+          <button class="history-btn" onclick="showHistory()">查看记录</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── 历史记录 ──
+function renderHistory() {
+  const records = loadRecords();
+  let items = '';
+  if (records.length === 0) {
+    items = '<div class="empty-history">还没有记录，完成第一次释放后会出现在这里 ✨</div>';
+  } else {
+    items = records.slice(0, 20).map(r => {
+      const d = new Date(r.time);
+      const dateStr = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+      const wantNames = (r.wants || []).map(id => WANTS.find(w => w.id === id)?.name).filter(Boolean).join('、');
+      return `
+        <div class="history-item">
+          <div class="history-item-emotion">${r.emotion || '—'}</div>
+          <div class="history-item-meta">
+            <span>${dateStr}</span>
+            ${wantNames ? `<span>${wantNames}</span>` : ''}
+            ${r.when ? `<span>${r.when}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('mainArea').innerHTML = `
+    <div class="history-card fade-in">
+      <div class="history-title">释放记录</div>
+      ${items}
+    </div>
+    <button class="history-back" onclick="backToRelease()">← 返回</button>
+  `;
+}
+
+function showHistory() { view = 'history'; render(); }
+function backToRelease() { view = 'release'; render(); }
+
+function restart() {
+  current = 0;
+  answers = {};
+  selectedWants = [];
+  view = 'flow';
+  render();
+}
+
+// ── 粒子 ──
+function launchParticles() {
+  const c = document.getElementById('particles');
+  c.innerHTML = '';
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 6 + 2;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;bottom:${Math.random()*20+5}%;
+      background:${Math.random()>.5?`rgba(168,197,160,${Math.random()*.5+.2})`:`rgba(126,184,201,${Math.random()*.4+.1})`};
+      animation-delay:${Math.random()*1.5}s;
+      animation-duration:${Math.random()*2+2}s;
+    `;
+    c.appendChild(p);
+  }
+  setTimeout(() => c.innerHTML = '', 4500);
+}
+
+// ── 启动 ──
+render();
+</script>
+</body>
+</html>
